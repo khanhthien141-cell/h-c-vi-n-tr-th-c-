@@ -1,0 +1,91 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hướng dẫn MILA khanitta</title><style>body{max-width:1000px;margin:40px auto;padding:25px;background:#fff6ed;color:#563a61;font:16px/1.8 system-ui}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}a{color:#7555a3}</style><h1>Hướng dẫn MILA khanitta</h1><p>Đọc trước khi đưa game lên máy chủ của bạn.</p><pre># MILA khanitta — Đấu trường học viện
+
+Game trực tuyến cho lớp học, giao diện tiếng Việt và đồ họa học viện phép thuật. Một giải có 4 đội, mỗi đội 5 người; mỗi trận có 2 đội. Học sinh không cần tạo tài khoản.
+
+## Chạy trên máy
+
+Cài Node.js phiên bản 22 trở lên. Giải nén thư mục, mở Terminal ngay trong thư mục có package.json:
+
+```sh
+npm ci
+npm run build
+npm start
+```
+
+Mở http://localhost:3000/mc.html cho giáo viên và http://localhost:3000/player.html cho học sinh. Nếu dùng điện thoại trong cùng mạng, thay localhost bằng IP của máy chạy server. Muốn chơi qua Internet, triển khai lên máy chủ như hướng dẫn bên dưới.
+
+## Đưa lên GitHub và Render
+
+1. Tạo một repository GitHub mới. Tải **nội dung bên trong thư mục đã giải nén** lên, sao cho package.json, server.js và render.yaml nằm ngay ở gốc repository. Không tải node_modules, data, dist hoặc tệp chứa bí mật.
+2. Trên Render, tạo **Web Service**, kết nối repository đó. Không chọn Static Site vì game cần máy chủ đồng bộ phòng và chiến đấu.
+3. Runtime: Node. Build Command: `npm ci &amp;&amp; npm run build`. Start Command: `npm start`. Health Check Path: `/api/health`.
+4. Khi triển khai thành công, dùng địa chỉ Render thực tế của bạn. Trang quản trò là `/mc.html`, trang học sinh là `/player.html`. Hai trang dùng chung máy chủ. Học sinh có thể khác Wi-Fi.
+5. Bản cấu hình render.yaml đi kèm cũng có thể dùng để tạo Blueprint. Nếu muốn lưu lâu dài qua những lần máy chủ khởi động lại, dùng cấu hình render-persistent.yaml với ổ lưu trữ và DATA_DIR=/var/data/arcana. Cấu hình này chọn dịch vụ có ổ bền vững và có thể phát sinh phí theo tài khoản Render. Bản không có ổ lưu trữ chỉ phù hợp thử nghiệm, không đảm bảo giữ dữ liệu sau khi máy chủ bị thay thế.
+
+Không có server, địa chỉ Render, mã phòng hay tài khoản của Bông được gắn cứng vào gói này. Người nhận tự tạo repository và dịch vụ của họ. QR được tạo tự động theo địa chỉ đang mở.
+
+## Một buổi chơi
+
+1. Quản trò mở mc.html, bấm Tạo phòng. Gửi link học sinh hoặc chiếu QR / mã 6 số.
+2. Đặt tên 4 đội; hai đội của vòng hiện tại được ưu tiên hiển thị. Biểu tượng được hệ thống chọn ngẫu nhiên, không trùng và giữ nguyên trong phòng.
+3. Có thể nhập danh sách 5 thành viên mỗi đội. Học sinh nhập biệt danh, mã phòng, chọn đội và tên trong danh sách nếu có.
+4. Quản trò bấm Danh sách thành viên &amp; duyệt vào, duyệt từng học sinh. Nếu thử một mình, sau khi học sinh đã vào phòng có thể dùng Điền người máy để điền chỗ trống.
+5. Mỗi đội đang thi đấu cần đủ 5 người đã duyệt. Bấm Mở chọn tướng. Đồng hồ máy chủ đếm 20 giây; học sinh chạm chọn và Chốt nhân vật. Không được trùng tướng trong cùng đội. Hết giờ tự chọn tướng còn trống cho người chưa chốt.
+6. Giữ thẻ tướng 3 giây mở ảnh nhân vật và chiêu thức. Chạm bất kỳ đâu để đóng. Khi đủ người chốt hoặc hết thời gian, chuyển sang phòng chờ hai đội, ảnh nhân vật trình chiếu lần lượt mỗi 2 giây.
+7. **Game không tự bắt đầu**: quản trò bấm Bắt đầu trận khi hai đội đã sẵn sàng.
+8. Trong trận, quản trò chuyển góc nhìn theo một đội hoặc xem toàn trận, mở trình chiếu toàn màn hình, tạm dừng và tiếp tục. Quản trò không điều khiển thay nhân vật.
+9. Kết thúc trận lưu điểm, tiếp tục bán kết 2 rồi chung kết. Bấm Giải mới để lưu giải cũ và chơi lại. Có Excel, trang in/lưu PDF, chỉnh điểm có lịch sử.
+
+## Điều khiển
+
+- Điện thoại nằm ngang: cần di chuyển bên trái; đánh thường và 3 nút chiêu bên phải.
+- Máy tính: WASD / phím mũi tên di chuyển; Space đánh; Q/E kỹ năng; R chiêu cuối.
+- Camera: nút ◈ đổi theo nhân vật / tự do, kéo mặt sân để xem khi ở chế độ tự do; +/− hoặc cuộn chuột đổi độ phóng; chạm bản đồ nhỏ đổi tổng quan.
+- Nút túi điểm mở cửa hàng. Cài đặt có bảng điểm, chat đội, nhạc và thoát màn trận.
+
+## Luật kiến thức
+
+Hạ đối thủ để tăng một cấp (tối đa 10). Lên cấp hoặc bị hạ sẽ mở câu hỏi Đúng/Sai 10 giây riêng cho người đó; không có câu hỏi định kỳ làm gián đoạn toàn trận. Hồi sinh sau 10 giây kể cả khi trả lời sai. Đúng mới cộng điểm, thưởng và mở chiêu cuối. Nhanh hơn được nhiều điểm. Ví mua đồ riêng không trừ điểm xếp hạng.
+
+Điểm chiến đấu và kiến thức được chuẩn hóa riêng và mỗi phần đóng góp 50%. Khi hòa tổng điểm, đội có điểm kiến thức cao hơn thắng; hòa hoàn toàn cần quản trò điều chỉnh có lý do trước khi mở vòng tiếp theo.
+
+## Câu hỏi giáo viên
+
+Excel gồm cột: CauHoi, DapAn, Vong, DoKho, ChuDe. DapAn nhận TRUE/FALSE, Đúng/Sai hoặc 1/0. Vong: 0 = bán kết 1, 1 = bán kết 2, 2 = chung kết. Tối đa 1MB mỗi tệp. Giáo viên xem trước đáp án và sửa các câu do mình tải lên trước trận. Bộ mẫu có 200 câu; cần tự duyệt mức phù hợp với lớp.
+
+## Chỉnh đồ họa và code
+
+| Tệp / thư mục | Chức năng |
+| --- | --- |
+| public/player.html, public/mc.html | Khung giao diện người chơi / quản trò |
+| public/mila.css | Màu sắc, bố cục, giao diện ngang và màn quản trò |
+| public/mila-app.js | Vào phòng, chọn tướng, đếm giờ, câu hỏi, điều khiển và thao tác MC |
+| public/mila-scene.js | Vẽ map, nhân vật, camera và hiệu ứng chiến đấu |
+| public/assets/mila/arena.webp | Map đã tách nhân vật để di chuyển độc lập |
+| public/assets/mila/portraits/ | 12 nhân vật nền trong suốt |
+| public/assets/mila/skills/ | Biểu tượng kỹ năng |
+| public/assets/mila/sheets/ | 12 ảnh giới thiệu nhân vật và chiêu thức |
+| public/assets/mila/teams/ | 4 biểu tượng đội phép thuật |
+| public/assets/audio/ | Nhạc sảnh và nhạc chiến đấu |
+| public/config/game.json | Thông số tùy chỉnh được đọc khi build |
+| shared/engine.js | Sát thương, di chuyển, AI, cấp, hồi sinh, tính điểm |
+| shared/selection.js | Giới hạn 20 giây, khóa tướng, tự chọn, chờ MC |
+| shared/quizzes.js | Câu hỏi riêng, hết giờ, chấm điểm |
+| shared/room-core.js | Quyền phòng và trạng thái giải cho bản hosted |
+| server.js | Máy chủ Node/Socket.IO cho máy cá nhân và Render |
+| worker/index.js | Bộ máy chủ dùng cho bản hosted hiện tại; không bắt buộc khi chạy Render |
+| scripts/build.mjs | Chuẩn bị tài nguyên và thư viện chạy game |
+| tests/ | Kiểm tra luật game, đáp án, phòng và đồng bộ |
+
+Ảnh approved-player.webp và approved-host.webp là ảnh đối chiếu thiết kế. Chúng không được phủ lên màn hình để giả giao diện có thể chơi. Giao diện thật được viết bằng HTML/CSS, map vẽ trên canvas và nhân vật di chuyển độc lập.
+
+## Phạm vi bản bàn giao
+
+Đây là bản thử nghiệm chạy được với đồ họa đã đưa vào code, chưa phải sản phẩm thương mại hoàn thiện. Nhân vật hiện có chuyển động cơ bản (di chuyển, nhún/đổi hướng), chưa có bộ animation đi/đánh nhiều khung cho từng tướng. Một số chiêu dùng chung cơ chế theo vai trò; hình minh họa chiêu cuối trong bộ ảnh là định hướng mỹ thuật, chưa phải tất cả hiệu ứng động đã tái tạo từng chi tiết. Chưa có cơ sở đo khách quan để khẳng định đạt hơn 90% giống ảnh; cần người dùng đối chiếu và duyệt bản chạy.
+
+Máy chủ Node hỗ trợ WebSocket; bản hosted dùng HTTP polling. Chưa kiểm thử tải thực tế 20 thiết bị điện thoại đồng thời hoặc mọi trình duyệt Zalo; nên thử với nhóm nhỏ trước buổi học. Không chia sẻ phiên/quyền quản trò của mình cho học sinh.
+
+## Kiểm tra
+
+`npm test` kiểm tra Node và bản hosted. `npm run build` tạo dist để Node phục vụ. `npm run build:site` chỉ dành cho hệ thống hosted của dự án.
+</pre></html>
