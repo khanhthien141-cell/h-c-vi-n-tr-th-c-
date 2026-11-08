@@ -1,0 +1,1 @@
+export function skillIconSet(h){const first={sol:'flame',luna:'moon',ivy:'leaf',kai:'arrow',ember:'flame',nova:'star',sage:'leaf',raven:'arrow',atlas:'attack',faye:'book',milo:'note',zephyr:'wind'};return ['attack',first[h.id]||'star',h.role==='Hỗ trợ'?'heal':h.role==='Đấu sĩ'?'shield':'dash','ultimate'];}
