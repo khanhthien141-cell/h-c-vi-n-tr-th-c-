@@ -1,0 +1,1 @@
+export function joystickVector(dx,dy,radius=50,deadzone=.1){const distance=Math.hypot(dx,dy),fraction=Math.min(1,distance/radius);if(fraction<deadzone||!distance)return{right:0,forward:0,x:0,y:0};return{right:dx/distance*fraction,forward:-dy/distance*fraction,x:dx/distance*Math.min(distance,radius),y:dy/distance*Math.min(distance,radius)};}
